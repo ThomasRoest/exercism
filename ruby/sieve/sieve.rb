@@ -1,31 +1,25 @@
 class Sieve
   def initialize(limit)
-    @range = (2..limit).to_a
+    @numbers = (2..limit).to_a
+    @marked_numbers = []
   end
 
   def primes
-    #keeping track of marked numbers
-    marked_numbers = []
+    @numbers.each do |number|
+      unless @marked_numbers.include?(number)
+        mark_number(number)
+      end
+      @numbers.reject!{|num| @marked_numbers.include?(num)}
+    end
+  end
 
-    #iterate over numbers in array
-    for number in @range do
-      #check if number is marked
-      if !marked_numbers.include?(number)
-        #multiple check unless number == i
-        @range.each do |i|
-          if number != i
-            if i % number == 0
-              marked_numbers << i
-              @range.delete(i)
-            end
-          end
-        end
+  private
+
+  def mark_number(number)
+    @numbers.each do |i|
+      if number != i && i % number == 0
+        @marked_numbers << i
       end
     end
-
-    #range without marked numbers = primes
-    @range
   end
 end
-
- puts Sieve.new(1000).primes
